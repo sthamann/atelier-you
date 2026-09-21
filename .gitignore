@@ -8,7 +8,8 @@ model/
 *.sqlite*
 node_modules/
 .codebase-memory/
-# Private demo captures, customer photos and audio are local deliverables only.
+# Large private video assets are distributed in the private release package.
+# The explicitly requested README preview lives in docs/media and is tracked.
 videos/**/assets/
 videos/**/capture/
 videos/**/snapshots/

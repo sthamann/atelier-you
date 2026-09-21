@@ -1,3 +1,3 @@
-# Produktionsbrief
+# ATELIER / YOU — schneller Schnitt
 
-60 Sekunden, 1920×1080, 30 fps. Deutsche private Demo für den Nutzer, mit seinem ausdrücklich gelieferten Foto. Zeigt den echten Shopware Storefront, magische Warteanimation, drei Perspektiven und einen gemeinsam generierten Fünf-Teile-Look. 17 echte fiktive Demoartikel. Mood: ruhige hochwertige Fashion-Kampagne mit klarer Produktbeweisführung. Normalgeschwindigkeit bei Browserausschnitten; keine erfundenen Wartezeiten. Musik instrumental, kein Voiceover. Ausgabe lokale MP4, keine öffentliche Veröffentlichung.
+20 Sekunden, 1920×1080, 30 fps. Sofort sichtbarer Artikelbild-zu-Anprobe-Effekt innerhalb der ersten Sekunde. Echte Shopware-Aufnahmen, deutlich gekürzte Wartephase im Outfit Studio. Beschleunigung ausdrücklich beschriftet. Drei tatsächliche neue Outfit-Ansichten mit v2-Gesichtsreferenz. Keine Behauptung unveränderter Identität oder physischer Passform. Instrumentale Musik. Ausgabe MP4 und privates GitHub-Release mit bearbeitbarem Projekt.

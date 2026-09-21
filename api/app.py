@@ -54,7 +54,17 @@ def initialize():
             INSERT INTO jobs SELECT *, 'front' FROM jobs_v1;
             DROP TABLE jobs_v1;
             ''')
-        db.execute("UPDATE jobs SET status='queued' WHERE status='running'")
+        if 'recipe' not in {r['name'] for r in db.execute('PRAGMA table_info(jobs)')}:
+            db.executescript("""
+            ALTER TABLE jobs RENAME TO jobs_v2;
+            CREATE TABLE jobs (id TEXT PRIMARY KEY, session TEXT, product TEXT,
+            status TEXT, priority INTEGER, created REAL, seconds REAL, error TEXT,
+            view TEXT NOT NULL DEFAULT 'front', recipe TEXT NOT NULL,
+            UNIQUE(session,product,view,recipe));
+            INSERT INTO jobs SELECT *, 'atelier-v1-768x1024-28steps' FROM jobs_v2;
+            DROP TABLE jobs_v2;
+            """)
+        db.execute("UPDATE jobs SET status='queued' WHERE status='running' AND recipe=?", (RECIPE,))
 
 def catalog():
     path = ROOT / 'catalog.json'
@@ -97,7 +107,7 @@ def worker():
         with mutation:
             sweep()
             with connection() as db:
-                job = db.execute("SELECT * FROM jobs WHERE status='queued' ORDER BY priority DESC, created LIMIT 1").fetchone()
+                job = db.execute("SELECT * FROM jobs WHERE status='queued' AND recipe=? ORDER BY priority DESC, created LIMIT 1", (RECIPE,)).fetchone()
                 if job:
                     db.execute("UPDATE jobs SET status='running' WHERE id=?", (job['id'],))
         if not job:
@@ -118,7 +128,7 @@ def worker():
             front = None
             if job['view'] != 'front':
                 with connection() as db:
-                    ref = db.execute("SELECT id FROM jobs WHERE session=? AND product=? AND view='front' AND status='done'", (job['session'],job['product'])).fetchone()
+                    ref = db.execute("SELECT id FROM jobs WHERE session=? AND product=? AND view='front' AND status='done' AND recipe=?", (job['session'],job['product'],RECIPE)).fetchone()
                 if not ref:
                     raise RuntimeError('Front reference not ready')
                 front = folder / (ref['id'] + '.webp')
@@ -229,7 +239,7 @@ def session(request: Request):
     except HTTPException:
         return {'active':False}
     with connection() as db:
-        jobs = [dict(r) for r in db.execute('SELECT id,product,status,seconds,error,view FROM jobs WHERE session=?', (row['id'],))]
+        jobs = [dict(r) for r in db.execute('SELECT id,product,status,seconds,error,view FROM jobs WHERE session=? AND recipe=?', (row['id'],RECIPE))]
     return {'active':True,'jobs':jobs,'expires_in':max(0,int(row['created']+TTL-time.time()))}
 
 @app.delete('/tryon/session')
@@ -274,9 +284,9 @@ def submit(body: JobRequest, request: Request):
     if state['error']:
         raise HTTPException(503,state['error'])
     with mutation, connection() as db:
-        if body.view != 'front' and not db.execute("SELECT 1 FROM jobs WHERE session=? AND product=? AND view='front' AND status='done'",(row['id'],body.product_id)).fetchone():
+        if body.view != 'front' and not db.execute("SELECT 1 FROM jobs WHERE session=? AND product=? AND view='front' AND status='done' AND recipe=?",(row['id'],body.product_id,RECIPE)).fetchone():
             raise HTTPException(409,'Zuerst wird deine Vorderansicht erstellt.')
-        prior = db.execute('SELECT * FROM jobs WHERE session=? AND product=? AND view=?',(row['id'],body.product_id,body.view)).fetchone()
+        prior = db.execute('SELECT * FROM jobs WHERE session=? AND product=? AND view=? AND recipe=?',(row['id'],body.product_id,body.view,RECIPE)).fetchone()
         if prior:
             if prior['status'] == 'failed':
                 db.execute("UPDATE jobs SET status='queued',error=NULL,priority=? WHERE id=?",(int(body.priority),prior['id']))
@@ -284,11 +294,11 @@ def submit(body: JobRequest, request: Request):
                 db.execute('UPDATE jobs SET priority=1 WHERE id=?',(prior['id'],))
             wake.set()
             return dict(db.execute('SELECT id,product,status,seconds,error,view FROM jobs WHERE id=?',(prior['id'],)).fetchone())
-        queued = db.execute("SELECT count(*) FROM jobs WHERE status IN ('queued','running')").fetchone()[0]
+        queued = db.execute("SELECT count(*) FROM jobs WHERE status IN ('queued','running') AND recipe=?",(RECIPE,)).fetchone()[0]
         if queued >= 256:
             raise HTTPException(429,'Die Anprobe ist gerade ausgelastet.')
         jid = secrets.token_hex(16)
-        db.execute('INSERT INTO jobs VALUES (?,?,?,?,?,?,?,?,?)',(jid,row['id'],body.product_id,'queued',int(body.priority),time.time(),None,None,body.view))
+        db.execute('INSERT INTO jobs VALUES (?,?,?,?,?,?,?,?,?,?)',(jid,row['id'],body.product_id,'queued',int(body.priority),time.time(),None,None,body.view,RECIPE))
     wake.set()
     return {'id':jid,'product':body.product_id,'status':'queued','view':body.view}
 
@@ -296,7 +306,7 @@ def submit(body: JobRequest, request: Request):
 def result(jid: str, request: Request):
     row = get_session(request)
     with connection() as db:
-        job = db.execute("SELECT * FROM jobs WHERE id=? AND session=? AND status='done'",(jid,row['id'])).fetchone()
+        job = db.execute("SELECT * FROM jobs WHERE id=? AND session=? AND status='done' AND recipe=?",(jid,row['id'],RECIPE)).fetchone()
     if not job:
         raise HTTPException(404)
     return FileResponse(session_dir(row['id']) / (jid + '.webp'),media_type='image/webp')

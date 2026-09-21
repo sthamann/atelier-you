@@ -71,3 +71,21 @@ def test_outfits_validate_slots_and_angles_require_front(api):
   assert other.post('/tryon/jobs',json={'product_id':first['product']}).status_code==404
  c.delete('/tryon/session')
  with m.connection() as db:assert db.execute('SELECT count(*) FROM outfits').fetchone()[0]==0
+
+def test_recipe_change_never_reuses_old_face_or_angle_reference(api, monkeypatch):
+ m,c=api
+ upload(c)
+ first=c.post('/tryon/jobs',json={'product_id':'product-a'}).json()
+ with m.connection() as db:
+  sid=db.execute('SELECT id FROM sessions').fetchone()['id']
+  db.execute("UPDATE jobs SET status='done' WHERE id=?",(first['id'],))
+ Image.new('RGB',(10,10)).save(m.session_dir(sid)/(first['id']+'.webp'))
+ monkeypatch.setattr(m,'RECIPE','a-new-identity-recipe')
+ assert c.get('/tryon/session').json()['jobs']==[]
+ assert c.get('/tryon/results/'+first['id']).status_code==404
+ assert c.post('/tryon/jobs',json={'product_id':'product-a','view':'side'}).status_code==409
+ new=c.post('/tryon/jobs',json={'product_id':'product-a'}).json()
+ assert new['id']!=first['id']
+ assert c.post('/tryon/jobs',json={'product_id':'product-a'}).json()['id']==new['id']
+ # Rollback can still use its own cache; no destructive migration of personal media.
+ with m.connection() as db:assert db.execute('SELECT count(*) FROM jobs').fetchone()[0]==2

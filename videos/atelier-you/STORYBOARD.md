@@ -1,11 +1,11 @@
-# ATELIER / YOU — 60 Sekunden
+# 20-Sekunden-Schnitt
 
-| Zeit | Bild | Aussage |
-|---|---|---|
-| 0–5 | Nutzerfoto, echter Einzel-Look, echter Fünf-Teile-Look | Ein Foto. Jeder Look. Ganz du. |
-| 5–25.5 | Unbeschleunigte reale Aufnahme von Upload, tatsächlicher Warteanimation und Ergebnis | Ein bisschen Magie. |
-| 25.5–32 | Tatsächliche generierte Front-, Seiten- und Rückansicht des Outfits | Neue Perspektiven; KI-Interpretation. |
-| 32–54 | Realer Ausschnitt aus dem Outfit Studio in Originalgeschwindigkeit | Fünf Teile gemeinsam. |
-| 54–60 | Editorialer Abschluss mit Outfit | 17 Pieces. Dein Stil. |
+| Zeit | Inhalt |
+|---|---|
+| 0–3 | Produktbild wird ab 0,55 s zur persönlichen Anprobe. Nutzen sofort sichtbar. |
+| 3–7 | Reale Produktdetailseite: Original und gespeichertes Ergebnis. |
+| 7–12 | Reale Outfit-Generierung beschleunigt; Schlussbild bleibt lesbar. |
+| 12–16 | Tatsächliche neue Vorder-, Seiten- und Rückansicht. |
+| 16–20 | Abschluss: 17 Pieces. Dein Stil. |
 
-Keine Sprecherstimme. Lokal erzeugter instrumentaler Musikteppich. Creme/Olive, große Manrope-Typografie, echte Produktbedienung. Keine simulierten Fertigmeldungen oder generierten Screenshots. Inferenzzeiten ohne Queue, Upload, Polling und Übergang; explizit als Bildberechnung beschriftet.
+Die visuelle Übergangszeit ist keine Inferenzzeit. Die beschleunigte Outfit-Sequenz trägt den Hinweis „Generierungszeit gekürzt“. Neue Gesichtsbilder stammen aus der v2-API; keine manuelle Gesichtsretusche. Identität ist näher am Referenzfoto, aber nicht garantiert unverändert.

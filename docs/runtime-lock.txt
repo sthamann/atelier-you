@@ -42,6 +42,7 @@ nvidia-nccl-cu13==2.30.7
 nvidia-nvjitlink==13.3.33
 nvidia-nvshmem-cu13==3.4.5
 nvidia-nvtx==13.0.85
+opencv-python-headless==4.13.0.92
 packaging==26.3
 pillow==12.3.0
 pluggy==1.6.0

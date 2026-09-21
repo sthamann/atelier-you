@@ -18,10 +18,30 @@
   function displayImage(url) {
     const base=$('#ay-main-image'), incoming=$('#ay-incoming-image');
     if(!base)return;
-    if(base.getAttribute('src')===url){if(incoming.dataset.target&&incoming.dataset.target!==url){++swapToken;clearTimeout(swapTimer);incoming.style.transition='none';incoming.style.opacity='0';incoming.dataset.target='';}return;}
+    const resetBase=()=>{base.style.transition='none';base.style.opacity='';void base.offsetWidth;base.style.transition='';};
+    if(base.getAttribute('src')===url){
+      if(incoming.dataset.target&&incoming.dataset.target!==url){++swapToken;clearTimeout(swapTimer);incoming.style.transition='none';incoming.style.opacity='0';incoming.dataset.target='';resetBase();}
+      return;
+    }
     if(incoming.dataset.target===url)return;
-    const token=++swapToken;clearTimeout(swapTimer);incoming.dataset.target=url;incoming.style.transition='none';incoming.style.opacity='0';
-    incoming.onload=()=>{if(token!==swapToken)return;requestAnimationFrame(()=>requestAnimationFrame(()=>{incoming.style.transition='opacity 1.6s cubic-bezier(.22,1,.36,1)';incoming.style.opacity='1';swapTimer=setTimeout(()=>{if(token!==swapToken)return;base.src=url;incoming.style.transition='none';incoming.style.opacity='0';incoming.dataset.target='';},1650);}));};incoming.src=url;
+    const token=++swapToken;clearTimeout(swapTimer);resetBase();
+    incoming.dataset.target=url;incoming.style.transition='none';incoming.style.opacity='0';
+    incoming.onload=()=>{
+      if(token!==swapToken)return;
+      const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const fadeOut=reduced?0:180, fadeIn=reduced?0:550;
+      // Clear the old face before revealing the new frame. No two-face morph.
+      base.style.transition='opacity '+fadeOut+'ms ease';base.style.opacity='0';
+      swapTimer=setTimeout(()=>{
+        if(token!==swapToken)return;
+        incoming.style.transition='opacity '+fadeIn+'ms ease';incoming.style.opacity='1';
+        swapTimer=setTimeout(()=>{
+          if(token!==swapToken)return;
+          base.src=url;resetBase();incoming.style.transition='none';incoming.style.opacity='0';incoming.dataset.target='';
+        },fadeIn+50);
+      },fadeOut);
+    };
+    incoming.src=url;
   }
   async function requestAngles(){
     if(!current||!jobFor(current))return;

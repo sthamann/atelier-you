@@ -2,10 +2,12 @@
 import os
 import time
 from pathlib import Path
+from .identity import face_reference
 
 REVISION = 'b3179ad355be050328e483a9dfdd9e60cd62adfa'
 MODEL_ID = 'Qwen/Qwen-Image-2.1'
-RECIPE = 'atelier-v1-768x1024-28steps'
+RECIPE = 'atelier-v3-face-anchor-single-view-768x1024-28steps'
+
 
 class Engine:
     def __init__(self):
@@ -13,52 +15,56 @@ class Engine:
         from diffusers import QwenImage21Pipeline
         self.torch = torch
         self.pipe = QwenImage21Pipeline.from_pretrained(
-            os.environ.get('MODEL_PATH', MODEL_ID),
-            torch_dtype=torch.bfloat16,
+            os.environ.get('MODEL_PATH', MODEL_ID), torch_dtype=torch.bfloat16,
             **({} if os.environ.get('MODEL_PATH') else {'revision': REVISION}),
         ).to('cuda')
         self.pipe.set_progress_bar_config(disable=True)
 
-    def generate(self, person: Path, garment: Path, output: Path, description: str, view='front', front=None):
+    def generate(self, person: Path, garment, output: Path, description, view='front', front=None):
         from PIL import Image
-        descriptions = description if isinstance(description,list) else [description]
-        description = '; '.join(descriptions)
-        prompt = (
-            'Create a photorealistic premium fashion e-commerce photograph. '
-            'The person in image 1 is the customer: preserve their exact face, hairstyle, '
-            'age, body proportions, skin tone and identity. Dress that same person in '
-            'the fashion item from image 2. Preserve the exact product color, texture, '
-            'cut, details and design. Product: ' + description + '. '
-            'Show the person from head to shoes, standing naturally in a clean warm '
-            'off-white photography studio, soft daylight, realistic fabric and shadows. '
-            'Keep other clothes understated and coordinated. Only one person. '
-            'No text, no collage, no split screen. Do not change the person to the model in image 2.'
-        )
-        garments = garment if isinstance(garment,list) else [garment]
-        refs = [person] + garments
-        if len(garments) > 1:
-            prompt = (
-                'Create one photorealistic full-body fashion catalog photograph. Image 1 is the customer. '
-                'Preserve this exact person, face, glasses, hairstyle, age, body build and identity. '
-                'Dress this person in ALL the following reference products together as one coherent outfit: '
-                + '; '.join(f'Image {i+2}: {d}' for i,d in enumerate(descriptions)) + '. '
-                'Every reference item must appear worn correctly on the same person. Wear the jacket over the top. '
-                'Wear the specified trousers, shoes and cap if provided. Preserve every item color, shape and texture. '
-                'Front view, standing naturally with arms down. No microphone, no props. '
-                'Full body from top of head to soles of shoes. Warm off-white studio, soft daylight, premium editorial photography. '
-                'Only one person, no montage, no text, no split-screen.'
-            )
-        if view != 'front':
-            refs.append(front)
-            angle = 'strict 90-degree side profile facing right, with the whole body and head turned sideways' if view == 'side' else 'strict rear view, 180 degrees from the front, back of head and back of garment facing the camera, face NOT visible'
-            prompt = (
-                'Image 1 identifies the customer. The following images show the garments. The LAST image is the approved front-view outfit photograph. '
-                'Generate a matching catalog photograph of the exact same person wearing the exact same full outfit as the LAST image, '
-                'but photographed from a ' + angle + '. Preserve hairstyle, glasses, body build, clothing colors, garment material, pants and shoes. '
-                'Full body head to shoes, consistent warm off-white studio and soft lighting. Natural standing pose, arms down. '
-                'No microphone, no props, no text, no montage. Do not show the original front angle. Products: ' + '; '.join(descriptions)
-            )
-        images = [Image.open(p).convert('RGB') for p in refs]
+        descriptions = description if isinstance(description, list) else [description]
+        garments = garment if isinstance(garment, list) else [garment]
+        with Image.open(person) as source:
+            customer = source.convert('RGB')
+        face = face_reference(customer)
+        if face is not None:
+            images = [face, customer]
+            prompt = ('IMAGE 1 IS THE FACE IDENTITY ANCHOR. Image 2 is the same person and the body reference. '
+                      'Keep the EXACT facial identity, facial proportions, asymmetric details, glasses, nose, '
+                      'jaw, stubble and expression from image 1. Do not make a similar-looking fashion model. '
+                      'Do not beautify, smooth the skin or change age. ')
+        else:
+            images = [customer]
+            prompt = ('Image 1 is the customer and the identity reference. Preserve their exact facial '
+                      'geometry, expression, glasses, age, skin and body proportions. No beautification. ')
+        first_garment = len(images) + 1
+        for path in garments:
+            with Image.open(path) as source:
+                images.append(source.convert('RGB'))
+        prompt += ('Edit the clothing of this exact person into one full-body photograph wearing all the '
+                   'following product references together: ' + '; '.join(
+                       f'image {i+first_garment}: {d}' for i, d in enumerate(descriptions)) + '. ')
+        if view == 'front':
+            prompt += ('Keep the reference head orientation and gaze; do not straighten the head toward '
+                       'the camera. Jacket over top if both are selected. Preserve exact product colors, '
+                       'textures and cuts. Natural standing pose with arms down, no microphone or props. ')
+        else:
+            # Rotate the completed look as one image. Multiple product/person
+            # references caused duplicate people and dropped outerwear in views.
+            with Image.open(front) as source:
+                images = [source.convert('RGB')]
+            angle = ('90 degrees so the whole body AND head face right in strict side profile'
+                     if view == 'side' else
+                     '180 degrees so the back of the body AND back of the head face the camera')
+            prompt = ('Edit this photograph: rotate the single person ' + angle + '. '
+                      'Show only the rotated person, centered alone. Replace the original front view; '
+                      'do not keep a second person or a front-view copy. Keep every garment exactly '
+                      'as worn in the input photograph, including the outer jacket, hat, trousers '
+                      'and shoes. Keep the same person, glasses, hair, build and proportions. '
+                      'Keep the same warm off-white studio, lighting and framing. '
+                      'For a rear view the face must not be visible. ')
+        prompt += ('Full body from head to soles, warm off-white studio, soft light. '
+                   'Only one person, no text, no collage, no split screen.')
         for im in images:
             im.thumbnail((1024, 1024))
         started = time.monotonic()
