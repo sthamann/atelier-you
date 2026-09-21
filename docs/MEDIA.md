@@ -1,27 +1,30 @@
-# Demo media and reproduction
+# One photo, every look — demo media
 
-The private README embeds `docs/media/atelier-you-demo.gif` directly. It is an animated preview, not a download-only link. Click it to open the private [v0.3.0 release](https://github.com/sthamann/atelier-you/releases/tag/v0.3.0).
+The private README directly embeds `docs/media/atelier-you-demo.gif`. The 12-second preview focuses on a single upload personalizing different products. Click it for the private [v0.4.0 release](https://github.com/sthamann/atelier-you/releases/tag/v0.4.0).
 
-The English release includes:
+The release contains:
 
-- `atelier-you-demo-en.mp4`: 20 seconds, 1920×1080, 30 fps, music.
-- `atelier-you-project-en.zip`: the source tree for this version, required video assets, fonts and font licenses. No credentials, runtime customer sessions or model weights.
-- `atelier-you-views-en.png`: newly rendered front, side and back overview with English captions.
-- `atelier-you-shop-en.png`: fresh screenshot of the English product page.
-- `SHA256SUMS.txt`: checksums for the release files.
+- `atelier-you-one-photo-every-look.mp4`: 20 seconds, 1920×1080, 30 fps, music, English.
+- `atelier-you-wardrobe-project.zip`: the versioned source and required images, recordings, music, fonts and licenses.
+- `atelier-you-four-looks.png`: the customer wearing a T-shirt, hoodie, jacket and sweater.
+- `atelier-you-personal-catalog.png`: the actual personalized collection after one upload.
+- `SHA256SUMS.txt`: release checksums.
 
-Unzip the project package, enter `videos/atelier-you`, run `npm run check`, then `npm run render`. Node/npm and network access for the pinned HyperFrames package and GSAP are required. The repository alone contains the composition but intentionally omits large source media; the release package restores the media at the expected relative paths.
+Unzip the project archive, enter `videos/atelier-you`, run `npm run check`, then `npm run render`. Node/npm and network access for the pinned HyperFrames package and GSAP are required. The repository contains the composition and inline media; the release archive restores all required larger assets at their relative paths. Credentials, runtime sessions and model weights are excluded.
 
-## Edit structure
+## Sequence
 
-- 0–3 s: product image to personal result; first reveal completes at 0.83 s.
-- 3–7 s: actual Shopware product detail page, cached original/result toggle.
-- 7–12 s: actual five-item outfit generation, wait shortened and labelled on screen.
-- 12–16 s: generated front, side and rear views.
-- 16–20 s: closing result.
+| Time | Content |
+|---|---|
+| 0–2 s | Four products become four personal looks, all revealed by 0.64 s. |
+| 2–4 s | Real upload of the chosen photo, once. |
+| 4–7 s | Real collection before and after generation in that session. |
+| 7–9.5 s | T-shirt: The Heavy Tee. |
+| 9.5–12 s | Hoodie: The Studio Hoodie. |
+| 12–14.5 s | Jacket: The City Overshirt. |
+| 14.5–17 s | Sweater: The Soft Knit. |
+| 17–20 s | Four looks together: Upload once. See yourself everywhere. |
 
-The GIF condenses this sequence for fast inline playback. Model latency is documented separately in [VERIFICATION.md](VERIFICATION.md). Editing playback speed does not change generation latency.
+All four product pages use the same session and completed results. The catalog before/after transition is an editorial cut across omitted generation time, not an unchanged real-time capture. Captions disclose this. There is no repeated photo upload between products. Single-product latency is documented in [VERIFICATION.md](VERIFICATION.md).
 
-Personal demo media are included by the user's explicit request in this private repository/release. Keep that in mind before changing repository visibility. Upstream model, audio and font terms are documented in [THIRD_PARTY.md](THIRD_PARTY.md).
-
-All visible copy in the shop, product descriptions, upload dialog, API errors and the composition is English. Both browser sequences were recorded again after deployment. The outfit and product try-on were generated in a fresh session using the chosen photo and existing v3 image recipe.
+Personal media are included at the user's explicit request in a private repository/release. Applicable model, audio and font terms are in [THIRD_PARTY.md](THIRD_PARTY.md).

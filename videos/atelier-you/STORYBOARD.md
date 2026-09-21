@@ -1,11 +1,14 @@
-# English 20-second cut
+# One upload, every look — 20-second cut
 
 | Time | Scene |
 |---|---|
-| 0–3 | Product image becomes the personal try-on from 0.55 s. Benefit visible immediately. |
-| 3–7 | Fresh English Shopware product page recording: original/result toggle, previously generated result. |
-| 7–12 | Fresh English Outfit Studio recording. Five items together; generation wait accelerated and labelled. |
-| 12–16 | Actual generated front, side and back views with English captions. |
-| 16–20 | 17 pieces. Your style. Final outfit and local model. |
+| 0–2 | Four original products become four personal looks: T-shirt, hoodie, jacket, sweater. All revealed by 0.64 s. |
+| 2–4 | Actual upload: selected customer photo and Start my try-on. |
+| 4–7 | Real collection before and after that upload; omitted generation wait labelled. |
+| 7–9.5 | The Heavy Tee product page, same session. |
+| 9.5–12 | The Studio Hoodie product page, same session. |
+| 12–14.5 | The City Overshirt product page, same session. |
+| 14.5–17 | The Soft Knit product page, same session. |
+| 17–20 | Four looks together: Upload once. See yourself everywhere. |
 
-The visual transition duration is not inference latency. The outfit clip explicitly says “Generation wait shortened”. Photographic assets contain no language-dependent text; all UI recordings, title images, the video and GIF are newly rendered in English. The original reference and v3 identity safeguards remain in use. Facial identity is not guaranteed.
+Simple editorial cuts retain the existing cream/olive style. The opening uses a short opacity reveal from product-only images to actual personal outputs; it never blends two generated faces. Scene changes are hard cuts. The final cards enter with a short opacity/vertical stagger. Browser recordings use the same single-upload session. No fake generation-time claim. Identity and garment details remain approximate.

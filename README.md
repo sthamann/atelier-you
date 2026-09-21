@@ -2,11 +2,13 @@
 
 A real Shopware storefront that turns your uploaded photo into your personal fashion model. Qwen-Image-2.1 runs locally on the demo server’s RTX PRO 6000. This private evaluation demo uses a fictional fashion collection and does not accept orders.
 
-[![ATELIER / YOU: product image to your look, Outfit Studio and multiple views](docs/media/atelier-you-demo.gif)](https://github.com/sthamann/atelier-you/releases/tag/v0.3.0)
+[![ATELIER / YOU: one upload, T-shirt, hoodie, jacket and sweater on you](docs/media/atelier-you-demo.gif)](https://github.com/sthamann/atelier-you/releases/tag/v0.4.0)
 
-**Watch here:** the 12-second GIF plays directly in this README. [20-second video with sound](https://github.com/sthamann/atelier-you/releases/download/v0.3.0/atelier-you-demo-en.mp4) · [Video and complete editable project](https://github.com/sthamann/atelier-you/releases/tag/v0.3.0)
+**Watch here:** the 12-second GIF plays directly in this README. [20-second video with sound](https://github.com/sthamann/atelier-you/releases/download/v0.4.0/atelier-you-one-photo-every-look.mp4) · [Video and complete editable project](https://github.com/sthamann/atelier-you/releases/tag/v0.4.0)
 
-*Recorded in the real English-language Shopware storefront. The outfit-generation wait is accelerated and labelled on screen. The video includes a cached result and a shortened generation sequence; it is not an uninterrupted real-time recording.*
+**One upload. Every product becomes personal.** The walkthrough shows the same photo used for a T-shirt, hoodie, jacket and knit sweater, with a personalized collection and four real product pages.
+
+*Recorded in the real English-language Shopware storefront, using one photo upload in one session. The catalog shows actual before/after states; generation waiting time is omitted and labelled. The product-page sequences display previously generated results. The edit does not imply instant generation.*
 
 - **Shop:** http://192.168.1.120:8090/
 - **Outfit Studio:** http://192.168.1.120:8090/?outfit=1
@@ -25,11 +27,11 @@ These addresses are accessible on the local network.
 6. Select **Your look is ready** to replace your photo or delete your session, photo and generated looks.
 
 <details>
-<summary>English storefront and generated views</summary>
+<summary>One photo across multiple products</summary>
 
-![The English Shopware product page with a personal try-on](docs/media/atelier-you-shop-en.png)
+![The same customer wearing a T-shirt, hoodie, jacket and sweater](docs/media/atelier-you-four-looks.png)
 
-![Front, side and back views of the five-piece outfit](docs/media/atelier-you-views-en.png)
+![The real collection with personalized product images after one upload](docs/media/atelier-you-personal-catalog.png)
 
 </details>
 
@@ -63,4 +65,4 @@ Runtime customer photos and results are stored outside the repository and outsid
 - [Third-party software and media](docs/THIRD_PARTY.md)
 - [Media and reproduction](docs/MEDIA.md)
 
-`api/` contains the image service, `shopware/AtelierYou/` the storefront plugin, `scripts/` the reproducible catalog setup and `videos/atelier-you/` the demo composition. The README GIF is tracked in Git. The [private release](https://github.com/sthamann/atelier-you/releases/tag/v0.3.0) includes the video and the media needed to edit and render it. Credentials, runtime customer sessions and model weights are excluded.
+`api/` contains the image service, `shopware/AtelierYou/` the storefront plugin, `scripts/` the reproducible catalog setup and `videos/atelier-you/` the demo composition. The README GIF is tracked in Git. The [private release](https://github.com/sthamann/atelier-you/releases/tag/v0.4.0) includes the video and the media needed to edit and render it. Credentials, runtime customer sessions and model weights are excluded.

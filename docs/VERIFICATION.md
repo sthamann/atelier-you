@@ -58,3 +58,9 @@ The README, custom storefront, all 17 product descriptions, upload/privacy contr
 Fresh browser recordings replace both previous German captures. A new session uploaded the chosen photo through the English dialog and generated the five-item outfit, its additional views and the single-product result. The 20-second MP4, 12-second README GIF and labelled view overview were rendered again with English titles and captions.
 
 English verification: all 17 live product detail pages returned their English catalog descriptions and `lang="en-GB"`, with no matches for the checked German UI strings. The fresh session completed 22 image jobs (17 product fronts, two extra overshirt views and three outfit views). At 390×844 the English Outfit Studio kept a 390 px document width and all five selectors. All 8 API/reference tests passed; the final English composition passed runtime, layout and contrast checks. The generated GIF decodes to 144 frames at 960×540 over 12 seconds.
+
+## One upload across products (v0.4.0)
+
+A fresh browser session uploaded the selected photo exactly once through the live English homepage. All 17 front-view jobs completed. The collection was captured before upload and after generation at the same viewport and scroll position. Four real product pages were then recorded: The Heavy Tee, The Studio Hoodie, The City Overshirt and The Soft Knit. Their completed front-view job IDs remained unchanged across the page visits; no second upload was performed. IDs and session cookies are kept out of the repository.
+
+The 20-second cut prioritizes these four different garments, with four side-by-side looks visible within the first second, one upload, the collection before/after and four 2.5-second product-page sequences. The README GIF condenses it to 12 seconds. The omitted generation wait and previously generated results are labelled. Runtime, layout and contrast checks passed before rendering.
