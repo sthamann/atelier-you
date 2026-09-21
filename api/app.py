@@ -76,7 +76,7 @@ def get_session(request):
     with connection() as db:
         row = db.execute('SELECT * FROM sessions WHERE id=? AND created>?', (sid, time.time()-TTL)).fetchone()
     if not row:
-        raise HTTPException(401, 'Bitte lade zuerst dein Foto hoch.')
+        raise HTTPException(401, 'Please upload your photo first.')
     return dict(row)
 
 def session_dir(sid):
@@ -101,7 +101,7 @@ def worker():
         state['ready'] = True
     except Exception:
         logging.exception('Model initialization failed')
-        state['error'] = 'Das Bildmodell konnte nicht geladen werden.'
+        state['error'] = 'The image model could not be loaded.'
         return
     while True:
         with mutation:
@@ -142,7 +142,7 @@ def worker():
         except Exception:
             logging.exception('Generation failed: %s', job['id'])
             with connection() as db:
-                db.execute("UPDATE jobs SET status='failed', error=? WHERE id=?", ('Anprobe fehlgeschlagen. Bitte erneut versuchen.',job['id']))
+                db.execute("UPDATE jobs SET status='failed', error=? WHERE id=?", ('Try-on failed. Please try again.',job['id']))
         finally:
             temp.unlink(missing_ok=True)
             state['active'] = None
@@ -202,7 +202,7 @@ def product_image(pid: str):
 async def upload(request: Request, response: Response, photo: UploadFile = File(...)):
     data = await photo.read(MAX_UPLOAD + 1)
     if len(data) > MAX_UPLOAD:
-        raise HTTPException(413, 'Bitte ein Foto unter 12 MB auswählen.')
+        raise HTTPException(413, 'Please choose a photo smaller than 12 MB.')
     try:
         im = Image.open(io.BytesIO(data))
         if im.format not in ('JPEG','PNG','WEBP'):
@@ -212,13 +212,13 @@ async def upload(request: Request, response: Response, photo: UploadFile = File(
         if min(im.size) < 256:
             raise ValueError()
     except (ValueError, UnidentifiedImageError, OSError, Image.DecompressionBombError):
-        raise HTTPException(400, 'Bitte ein gültiges JPG, PNG oder WebP mit mindestens 256 Pixeln verwenden.')
+        raise HTTPException(400, 'Please use a valid JPG, PNG or WebP image with at least 256 pixels on each side.')
     with mutation:
         sweep()
         with connection() as db:
             count = db.execute('SELECT count(*) FROM sessions').fetchone()[0]
         if count >= 32:
-            raise HTTPException(429, 'Die Demo ist gerade ausgelastet. Bitte später erneut versuchen.')
+            raise HTTPException(429, 'The demo is busy. Please try again later.')
         old = request.cookies.get(COOKIE)
         if old:
             remove_session(hashlib.sha256(old.encode()).hexdigest())
@@ -268,24 +268,24 @@ def submit(body: JobRequest, request: Request):
         ids = sorted(set(body.product_ids))
         chosen = [p for p in catalog() if p['id'] in ids]
         if len(chosen) != len(ids):
-            raise HTTPException(404,'Produkt nicht gefunden.')
+            raise HTTPException(404,'Product not found.')
         slots = [p.get('slot','top') for p in chosen]
         if len(slots) != len(set(slots)):
-            raise HTTPException(400,'Bitte höchstens ein Teil pro Outfit-Kategorie wählen.')
+            raise HTTPException(400,'Please choose at most one item per outfit category.')
         body.product_id = 'outfit-' + hashlib.sha256('|'.join(ids).encode()).hexdigest()[:24]
         with mutation, connection() as db:
             db.execute('INSERT OR IGNORE INTO outfits VALUES (?,?,?)',(body.product_id,row['id'],json.dumps(ids)))
     elif body.product_id and body.product_id.startswith('outfit-'):
         with connection() as db:
             if not db.execute('SELECT 1 FROM outfits WHERE id=? AND session=?',(body.product_id,row['id'])).fetchone():
-                raise HTTPException(404,'Outfit nicht gefunden.')
+                raise HTTPException(404,'Outfit not found.')
     elif body.product_id not in {p['id'] for p in catalog()}:
-        raise HTTPException(404,'Produkt nicht gefunden.')
+        raise HTTPException(404,'Product not found.')
     if state['error']:
         raise HTTPException(503,state['error'])
     with mutation, connection() as db:
         if body.view != 'front' and not db.execute("SELECT 1 FROM jobs WHERE session=? AND product=? AND view='front' AND status='done' AND recipe=?",(row['id'],body.product_id,RECIPE)).fetchone():
-            raise HTTPException(409,'Zuerst wird deine Vorderansicht erstellt.')
+            raise HTTPException(409,'Your front view needs to be created first.')
         prior = db.execute('SELECT * FROM jobs WHERE session=? AND product=? AND view=? AND recipe=?',(row['id'],body.product_id,body.view,RECIPE)).fetchone()
         if prior:
             if prior['status'] == 'failed':
@@ -296,7 +296,7 @@ def submit(body: JobRequest, request: Request):
             return dict(db.execute('SELECT id,product,status,seconds,error,view FROM jobs WHERE id=?',(prior['id'],)).fetchone())
         queued = db.execute("SELECT count(*) FROM jobs WHERE status IN ('queued','running') AND recipe=?",(RECIPE,)).fetchone()[0]
         if queued >= 256:
-            raise HTTPException(429,'Die Anprobe ist gerade ausgelastet.')
+            raise HTTPException(429,'The fitting room is busy.')
         jid = secrets.token_hex(16)
         db.execute('INSERT INTO jobs VALUES (?,?,?,?,?,?,?,?,?,?)',(jid,row['id'],body.product_id,'queued',int(body.priority),time.time(),None,None,body.view,RECIPE))
     wake.set()

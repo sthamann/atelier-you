@@ -56,7 +56,7 @@ SHOPWARE_ADMIN_FILE=/home/aime/atelier-tryon/admin.json \
 ../.venv/bin/python scripts/seed_shopware.py
 ```
 
-The seed is repeatable: deterministic product/media/category IDs are upserted. It sets the dedicated channel's domain and navigation category and creates 17 real products. It does not delete unrelated records. The API catalog is a snapshot of these seeded products; changes made later in Shopware Admin require synchronization before the API reflects them.
+The seed is repeatable: deterministic product/media/category IDs are upserted. It sets the dedicated channel's domain, English (`en-GB`) language/snippet set and navigation category and creates 17 real products with English descriptions. It does not delete unrelated records. The API catalog is a snapshot of these seeded products; changes made later in Shopware Admin require synchronization before the API reflects them.
 
 ## Updating and verification
 

@@ -6,3 +6,5 @@
 
 /* Keep navigation available and the status clear of the model's face on phones. */
 @media(max-width:800px){.ay-header{height:auto;min-height:85px;flex-wrap:wrap;padding-top:18px}.ay-header nav{display:flex;order:3;width:100%;justify-content:center;gap:23px;font-size:11px;padding:17px 0 14px}.ay-image-label{top:8px;left:8px;padding:6px 8px;font-size:8px;letter-spacing:.7px}}
+/* Use the translated label instead of browser-localized file input text. */
+.ay-drop{position:relative}.ay-drop input{position:absolute;width:1px;height:1px;padding:0;margin:0;opacity:0;overflow:hidden}.ay-drop:focus-within{outline:3px solid #8c9e59;outline-offset:4px}

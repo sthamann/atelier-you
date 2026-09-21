@@ -17,8 +17,14 @@ def search(entity,**body):
  return call('POST','search/'+entity,json={'limit':100,**body})['data']
 channels=search('sales-channel',filter=[{'type':'equals','field':'typeId','value':'8a243080f92e4c719546314b577cf82b'}])
 channel=channels[0];cid=channel['id'];currency=channel['attributes']['currencyId']
+# Keep Shopware's native pages, snippets and product translations in English.
+english_locale=next(x for x in search('locale',filter=[{'type':'equals','field':'code','value':'en-GB'}]))['id']
+english=next(x for x in search('language') if x['attributes']['localeId']==english_locale)['id']
+snippets=next(x for x in search('snippet-set') if x['attributes']['iso']=='en-GB')['id']
+c.headers['sw-language-id']=english
+call('PATCH','sales-channel/'+cid,json={'languageId':english,'languages':[{'id':english}]})
 for domain in search('sales-channel-domain',filter=[{'type':'equals','field':'salesChannelId','value':cid}]):
- call('PATCH','sales-channel-domain/'+domain['id'],json={'url':base})
+ call('PATCH','sales-channel-domain/'+domain['id'],json={'url':base,'languageId':english,'snippetSetId':snippets})
 tax=next(x for x in search('tax') if x['attributes']['taxRate']==19)['id']
 category=uuid.uuid5(uuid.NAMESPACE_URL,'atelier-you/category').hex
 call('POST','_action/sync',json={'category':{'entity':'category','action':'upsert','payload':[{'id':category,'name':'ATELIER / YOU','active':True,'type':'page'}]}})

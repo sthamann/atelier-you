@@ -1,11 +1,11 @@
-# 20-Sekunden-Schnitt
+# English 20-second cut
 
-| Zeit | Inhalt |
+| Time | Scene |
 |---|---|
-| 0–3 | Produktbild wird ab 0,55 s zur persönlichen Anprobe. Nutzen sofort sichtbar. |
-| 3–7 | Reale Produktdetailseite: Original und gespeichertes Ergebnis. |
-| 7–12 | Reale Outfit-Generierung beschleunigt; Schlussbild bleibt lesbar. |
-| 12–16 | Tatsächliche neue Vorder-, Seiten- und Rückansicht. |
-| 16–20 | Abschluss: 17 Pieces. Dein Stil. |
+| 0–3 | Product image becomes the personal try-on from 0.55 s. Benefit visible immediately. |
+| 3–7 | Fresh English Shopware product page recording: original/result toggle, previously generated result. |
+| 7–12 | Fresh English Outfit Studio recording. Five items together; generation wait accelerated and labelled. |
+| 12–16 | Actual generated front, side and back views with English captions. |
+| 16–20 | 17 pieces. Your style. Final outfit and local model. |
 
-Die visuelle Übergangszeit ist keine Inferenzzeit. Die beschleunigte Outfit-Sequenz trägt den Hinweis „Generierungszeit gekürzt“. Neue Gesichtsbilder stammen aus der v2-API; keine manuelle Gesichtsretusche. Identität ist näher am Referenzfoto, aber nicht garantiert unverändert.
+The visual transition duration is not inference latency. The outfit clip explicitly says “Generation wait shortened”. Photographic assets contain no language-dependent text; all UI recordings, title images, the video and GIF are newly rendered in English. The original reference and v3 identity safeguards remain in use. Facial identity is not guaranteed.

@@ -50,3 +50,11 @@ The frontend now fades the old image out before revealing the new one, avoiding 
 ## Media delivery
 
 The main film is 20 seconds (1920×1080, 30 fps), with the first product-to-person reveal completed at 0.83 seconds. The private README embeds a short animated GIF. The MP4 and an editable project archive with the required media are release assets. Credentials, active sessions and model weights are excluded.
+
+## English storefront and media (v0.3.0)
+
+The README, custom storefront, all 17 product descriptions, upload/privacy controls, generation states and API error messages were translated into English. The Shopware sales channel, domain snippets and product translation context use `en-GB`. EUR prices use English decimal formatting. The catalog generator can update product copy without loading the image model when all product images already exist.
+
+Fresh browser recordings replace both previous German captures. A new session uploaded the chosen photo through the English dialog and generated the five-item outfit, its additional views and the single-product result. The 20-second MP4, 12-second README GIF and labelled view overview were rendered again with English titles and captions.
+
+English verification: all 17 live product detail pages returned their English catalog descriptions and `lang="en-GB"`, with no matches for the checked German UI strings. The fresh session completed 22 image jobs (17 product fronts, two extra overshirt views and three outfit views). At 390×844 the English Outfit Studio kept a 390 px document width and all five selectors. All 8 API/reference tests passed; the final English composition passed runtime, layout and contrast checks. The generated GIF decodes to 144 frames at 960×540 over 12 seconds.

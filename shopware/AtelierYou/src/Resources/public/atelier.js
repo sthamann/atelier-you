@@ -7,11 +7,11 @@
   const studio = $('.ay-main')?.dataset.outfit === 'true';
   let products = [], active = false, jobs = [], personalURL = '', originalURL = '', showOriginal = false, previewURL, currentView = 'front', swapTimer, swapToken = 0;
   const angleRequests = new Set();
-  const money = n => new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR'}).format(n);
+  const money = n => new Intl.NumberFormat('en-GB',{style:'currency',currency:'EUR'}).format(n);
   const toast = text => {$('#ay-toast').textContent=text;$('#ay-toast').hidden=false;setTimeout(()=>$('#ay-toast').hidden=true,6000);};
   async function api(path, options={}) {
     const r = await fetch('/tryon/'+path,{credentials:'same-origin',...options});
-    if(!r.ok){let d;try{d=await r.json();}catch{}throw new Error(d?.detail||'Die Anprobe ist gerade nicht erreichbar.');}
+    if(!r.ok){let d;try{d=await r.json();}catch{}throw new Error(d?.detail||'The fitting room is currently unavailable.');}
     return r.json();
   }
   const jobFor = (id,view='front') => jobs.find(j=>j.product===id && (j.view||'front')===view && j.status==='done');
@@ -56,7 +56,7 @@
       const visual=document.createElement('div');visual.className='ay-card-visual';
       const img=document.createElement('img');img.alt=p.name;img.loading='lazy';img.dataset.pid=p.id;
       const done=jobFor(p.id);img.src=done?'/tryon/results/'+done.id:p.image;
-      const tag=document.createElement('span');tag.className='ay-card-tag';tag.textContent=done?'DEIN LOOK':p.category.toUpperCase();
+      const tag=document.createElement('span');tag.className='ay-card-tag';tag.textContent=done?'YOUR LOOK':p.category.toUpperCase();
       const arrow=document.createElement('span');arrow.className='ay-card-arrow';arrow.textContent='↗';
       visual.append(img,tag,arrow);
       const info=document.createElement('div');info.className='ay-card-info';
@@ -70,10 +70,10 @@
     const host=$('#ay-outfit-selectors');if(!host)return;
     let saved={};try{saved=JSON.parse(localStorage.getItem('atelier-outfit')||'{}');}catch{}
     const defaults={top:'The Heavy Tee',outer:'The City Overshirt',bottom:'The Relaxed Chino',shoes:'The Court Sneaker',head:'The Everyday Cap'};
-    for(const [slot,label] of Object.entries({top:'OBERTEIL',outer:'JACKE',bottom:'HOSE',shoes:'SCHUHE',head:'CAP'})){
+    for(const [slot,label] of Object.entries({top:'TOP',outer:'JACKET',bottom:'TROUSERS',shoes:'SHOES',head:'CAP'})){
       const row=document.createElement('div');row.className='ay-outfit-select';const img=document.createElement('img');img.alt=label;
       const wrap=document.createElement('div'),lab=document.createElement('label');lab.textContent=label;lab.htmlFor='slot-'+slot;
-      const select=document.createElement('select');select.id='slot-'+slot;select.dataset.slot=slot;select.add(new Option('Ohne '+label.toLowerCase(),''));
+      const select=document.createElement('select');select.id='slot-'+slot;select.dataset.slot=slot;select.add(new Option('No '+label.toLowerCase(),''));
       const candidates=products.filter(p=>p.slot===slot);for(const p of candidates)select.add(new Option(p.name+' · '+p.color+' · '+money(p.price),p.id));
       select.value=saved[slot]!==undefined?saved[slot]:(candidates.find(p=>p.name===defaults[slot])?.id||candidates[0]?.id||'');
       const update=()=>{const p=products.find(p=>p.id===select.value);img.src=p?.image||products[0].image;img.style.opacity=p?'1':'.2';saved[slot]=select.value;localStorage.setItem('atelier-outfit',JSON.stringify(saved));$('#ay-outfit-price').textContent=money(products.filter(p=>outfitIds().includes(p.id)).reduce((a,p)=>a+p.price,0));$('#ay-outfit-generate').disabled=!outfitIds().length;};
@@ -87,10 +87,10 @@
     catch(e){toast(e.message);}finally{button.disabled=false;}
   }
   function paint(){
-    $('[data-profile-label]').textContent=active?'Dein Look ist aktiv':'Deine Anprobe';
+    $('[data-profile-label]').textContent=active?'Your look is ready':'Your fitting room';
     $('#ay-delete').hidden=!active;
-    if($('#ay-try-label'))$('#ay-try-label').textContent=active?'Deine persönliche Ansicht':'An mir ansehen';
-    for(const p of products){const done=jobFor(p.id);document.querySelectorAll('img[data-pid="'+p.id+'"]').forEach(img=>{const next=done?'/tryon/results/'+done.id:p.image;if(img.getAttribute('src')!==next)img.src=next;img.parentElement.querySelector('.ay-card-tag').textContent=done?'DEIN LOOK':p.category.toUpperCase();});}
+    if($('#ay-try-label'))$('#ay-try-label').textContent=active?'Your personal view':'See it on me';
+    for(const p of products){const done=jobFor(p.id);document.querySelectorAll('img[data-pid="'+p.id+'"]').forEach(img=>{const next=done?'/tryon/results/'+done.id:p.image;if(img.getAttribute('src')!==next)img.src=next;img.parentElement.querySelector('.ay-card-tag').textContent=done?'YOUR LOOK':p.category.toUpperCase();});}
     const hero=$('#ay-hero-image');if(hero&&products[0]){const done=jobFor(products[0].id);const src=done?'/tryon/results/'+done.id:products[0].image;if(hero.getAttribute('src')!==src)hero.src=src;}
     if(studio&&!current){if(originalURL)displayImage(originalURL);return;}
     if(!current)return;
@@ -98,8 +98,8 @@
     const visual=$('.ay-product-visual');
     $('#ay-angles').hidden=!active;
     document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('selected',b.dataset.view===currentView));
-    if(done){personalURL='/tryon/results/'+done.id;displayImage(showOriginal?originalURL:personalURL);$('#ay-image-state').textContent=showOriginal?'THE ORIGINAL':({front:'DEIN PERSÖNLICHER LOOK',side:'DEIN LOOK · SEITENANSICHT',back:'DEIN LOOK · RÜCKANSICHT'}[currentView]);$('#ay-compare').hidden=false;$('#ay-render-state').hidden=true;visual.classList.remove('is-generating');$('#ay-personal-note').textContent='Für dich generiert · '+Math.round(done.seconds)+' s · gespeichert für deine Sitzung';}
-    else{personalURL='';if(!active)displayImage(originalURL);$('#ay-compare').hidden=true;$('#ay-image-state').textContent=active?'DEIN LOOK ENTSTEHT':'THE ORIGINAL';$('#ay-render-state').hidden=!active||job?.status==='failed';visual.classList.toggle('is-generating',active&&job?.status!=='failed');if(active&&job?.status==='failed')$('#ay-personal-note').textContent=job.error;else if(active)$('#ay-render-state span:last-child').textContent=job?.status==='running'?'Ein bisschen Magie. Dein Look entsteht …':'Dein Look wird vorbereitet …';}
+    if(done){personalURL='/tryon/results/'+done.id;displayImage(showOriginal?originalURL:personalURL);$('#ay-image-state').textContent=showOriginal?'THE ORIGINAL':({front:'YOUR PERSONAL LOOK',side:'YOUR LOOK · SIDE VIEW',back:'YOUR LOOK · BACK VIEW'}[currentView]);$('#ay-compare').hidden=false;$('#ay-render-state').hidden=true;visual.classList.remove('is-generating');$('#ay-personal-note').textContent='Created for you · '+Math.round(done.seconds)+' s · saved for your session';}
+    else{personalURL='';if(!active)displayImage(originalURL);$('#ay-compare').hidden=true;$('#ay-image-state').textContent=active?'CREATING YOUR LOOK':'THE ORIGINAL';$('#ay-render-state').hidden=!active||job?.status==='failed';visual.classList.toggle('is-generating',active&&job?.status!=='failed');if(active&&job?.status==='failed')$('#ay-personal-note').textContent=job.error;else if(active)$('#ay-render-state span:last-child').textContent=job?.status==='running'?'A little magic. Creating your look …':'Preparing your look …';}
     if(active&&jobFor(current))requestAngles();
   }
 
@@ -116,11 +116,11 @@
   $('#ay-start').addEventListener('click',async()=>{
     const file=$('#ay-file').files[0];if(!file)return;
     $('#ay-start').disabled=true;$('#ay-upload-error').textContent='';
-    try{const form=new FormData();form.append('photo',file);await api('session',{method:'POST',body:form});active=true;jobs=[];showOriginal=false;currentView='front';angleRequests.clear();if(studio){current='';originalURL='/tryon/photo';}paint();dialog.close();toast('Dein Foto ist bereit. Wir erstellen deine persönlichen Looks.');await queue();}
+    try{const form=new FormData();form.append('photo',file);await api('session',{method:'POST',body:form});active=true;jobs=[];showOriginal=false;currentView='front';angleRequests.clear();if(studio){current='';originalURL='/tryon/photo';}paint();dialog.close();toast('Your photo is ready. We are creating your personal looks.');await queue();}
     catch(e){$('#ay-upload-error').textContent=e.message;toast(e.message);}finally{$('#ay-start').disabled=false;}
   });
-  $('#ay-delete').addEventListener('click',async()=>{try{await api('session',{method:'DELETE'});active=false;jobs=[];showOriginal=false;currentView='front';angleRequests.clear();if(studio){current='';originalURL=products[0].image;}$('#ay-file').value='';$('#ay-preview').hidden=true;$('#ay-start').disabled=true;paint();dialog.close();toast('Dein Foto und deine Looks wurden gelöscht.');}catch(e){toast(e.message);}});
-  $('#ay-compare')?.addEventListener('click',()=>{showOriginal=!showOriginal;$('#ay-compare').textContent=showOriginal?'Meinen Look ansehen ↔':'Original ansehen ↔';paint();});
+  $('#ay-delete').addEventListener('click',async()=>{try{await api('session',{method:'DELETE'});active=false;jobs=[];showOriginal=false;currentView='front';angleRequests.clear();if(studio){current='';originalURL=products[0].image;}$('#ay-file').value='';$('#ay-preview').hidden=true;$('#ay-start').disabled=true;paint();dialog.close();toast('Your photo and looks have been deleted.');}catch(e){toast(e.message);}});
+  $('#ay-compare')?.addEventListener('click',()=>{showOriginal=!showOriginal;$('#ay-compare').textContent=showOriginal?'View my look ↔':'View original ↔';paint();});
   document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',async()=>{currentView=b.dataset.view;showOriginal=false;paint();if(!jobFor(current,currentView)){try{await api('jobs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({product_id:current,view:currentView,priority:true})});await refresh();}catch(e){toast(e.message);}}}));
   document.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-filter]').forEach(x=>x.classList.toggle('active',x===b));draw(b.dataset.filter);}));
   document.querySelectorAll('.ay-sizes button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.ay-sizes button').forEach(x=>x.classList.toggle('selected',x===b));}));

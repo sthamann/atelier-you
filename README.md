@@ -1,56 +1,66 @@
 # ATELIER / YOU
 
-Ein echter Shopware Storefront, in dem ein hochgeladenes Foto zum persönlichen Model wird. Qwen-Image-2.1 läuft lokal auf der RTX PRO 6000 des Demo-Servers. Der Shop ist eine private Evaluationsdemo mit fiktiver Modekollektion und ohne Bestellannahme.
+A real Shopware storefront that turns your uploaded photo into your personal fashion model. Qwen-Image-2.1 runs locally on the demo server’s RTX PRO 6000. This private evaluation demo uses a fictional fashion collection and does not accept orders.
 
-[![ATELIER / YOU: Artikelbild → dein Look, Outfit Studio und mehrere Perspektiven](docs/media/atelier-you-demo.gif)](https://github.com/sthamann/atelier-you/releases/tag/v0.2.0)
+[![ATELIER / YOU: product image to your look, Outfit Studio and multiple views](docs/media/atelier-you-demo.gif)](https://github.com/sthamann/atelier-you/releases/tag/v0.3.0)
 
-**Direkt ansehen:** Die 12-Sekunden-GIF läuft hier automatisch. [20-Sekunden-Video mit Ton](https://github.com/sthamann/atelier-you/releases/download/v0.2.0/atelier-you-demo-v2.mp4) · [Video und vollständiges Projektpaket](https://github.com/sthamann/atelier-you/releases/tag/v0.2.0)
+**Watch here:** the 12-second GIF plays directly in this README. [20-second video with sound](https://github.com/sthamann/atelier-you/releases/download/v0.3.0/atelier-you-demo-en.mp4) · [Video and complete editable project](https://github.com/sthamann/atelier-you/releases/tag/v0.3.0)
 
-*Echte Shopware-Aufnahmen; die Wartephase im Outfit Studio ist beschleunigt. Das Video zeigt bereits erzeugte Ergebnisse und eine gekürzte Neuberechnung. Es bildet keine durchgehend unveränderte Echtzeitaufnahme ab.*
+*Recorded in the real English-language Shopware storefront. The outfit-generation wait is accelerated and labelled on screen. The video includes a cached result and a shortened generation sequence; it is not an uninterrupted real-time recording.*
 
 - **Shop:** http://192.168.1.120:8090/
 - **Outfit Studio:** http://192.168.1.120:8090/?outfit=1
-- **API-Dokumentation:** http://192.168.1.120:8091/docs
+- **API documentation:** http://192.168.1.120:8091/docs
 - **Status:** http://192.168.1.120:8090/tryon/health
 
-Die Adressen sind im lokalen Netz erreichbar.
+These addresses are accessible on the local network.
 
-## Ausprobieren
+## Try it
 
-1. Ein Produkt öffnen und „An mir ansehen“ wählen.
-2. Ein Foto hochladen. Ein möglichst vollständiges Körperfoto verbessert die Referenz; verdeckte oder fehlende Bereiche werden von der KI ergänzt.
-3. Während der Berechnung bewegt sich Licht über das langsam verblassende Produktbild. Das fertige Bild wird erst nach dem Laden weich eingeblendet.
-4. Zwischen vorne, Seite, hinten und Original wechseln. Weitere Produktseiten verwenden dieselbe Sitzung und bereits berechnete Bilder.
-5. Im Outfit Studio Oberteil, Jacke, Hose, Schuhe und Cap kombinieren. Jede Kategorie kann auch leer bleiben. „Outfit an mir ansehen“ erzeugt den gesamten Look gemeinsam.
-6. Über „Dein Look ist aktiv“ das Foto wechseln oder die Sitzung samt Fotos und Ergebnissen löschen.
+1. Open a product and select **See it on me**.
+2. Upload your photo. A well-lit, full-length picture provides the best reference; the AI fills in hidden or missing areas.
+3. While the image is being created, light moves across the slowly fading product image. The completed result is revealed once it has loaded.
+4. Switch between **Front**, **Side**, **Back** and **View original**. Other product pages reuse your session and completed images.
+5. In **Outfit Studio**, combine a top, jacket, trousers, shoes and cap. Any category can be left empty. **See this outfit on me** generates the complete look together.
+6. Select **Your look is ready** to replace your photo or delete your session, photo and generated looks.
 
-## Umfang
+<details>
+<summary>English storefront and generated views</summary>
 
-17 echte Shopware-Produkte: zwei Jacken, sieben Oberteile einschließlich drei T-Shirts, drei Hosen, drei Paar Schuhe und zwei Caps. Jedes hat einen Produktdatensatz, Preis, Cover und eine Shopware-Detailseite. Produktbilder und Waren sind für die Demo synthetisch erzeugt.
+![The English Shopware product page with a personal try-on](docs/media/atelier-you-shop-en.png)
 
-Eine FastAPI-Anwendung verarbeitet Uploads und eine persistente SQLite-Warteschlange. Ein resident geladenes Modell arbeitet auf genau einer GPU. Angeforderte Produkte werden vor noch nicht gestarteten Hintergrundjobs behandelt. Ergebnisse werden pro Sitzung, Produktkombination, Ansicht und Generierungsversion wiederverwendet; ein zweiter Seitenbesuch erzeugt kein neues Bild.
+![Front, side and back views of the five-piece outfit](docs/media/atelier-you-views-en.png)
 
-Die gemessene reine Bildberechnung lag bei einzelnen Oberteilen bei 8,4 Sekunden für das neu geprüfte Overshirt und beim getesteten Fünf-Teile-Outfit bei 14,2 Sekunden für die Vorderansicht sowie etwa 6,1 Sekunden je weiterer Ansicht. Wartezeit in der Queue, Upload, Polling und Überblendung kommen hinzu. Das ist keine Last- oder Mehrbenutzergarantie.
+</details>
 
-## Gesichtsreferenz und Übergang
+## What is included
 
-Die zweite Demo zeigte echte Gesichtsabweichungen. Die überarbeitete Version verwendet einen automatisch erkannten Gesichtsausschnitt als erste Referenz und priorisiert Gesicht, Brille, Haaransatz und Kopfhaltung im Auftrag an das Modell. Bei unklarer Erkennung wird kein beliebiges Gesicht ausgewählt. Seiten- und Rückansichten drehen die fertige Vorderansicht als einzige Bildreferenz; mehrere Referenzpersonen hatten in einem Zwischenversuch doppelte Personen erzeugt. Alte Ergebnisse werden nach einem Versionswechsel nicht mehr als aktuelle Treffer verwendet.
+17 actual Shopware products: two jackets, seven tops including three T-shirts, three pairs of trousers, three pairs of shoes and two caps. Each has a product record, price, cover image and Shopware product detail page. The merchandise and product images are synthetic demo references.
 
-Beim Bildwechsel blendet das alte Bild in 180 ms aus, danach das geladene neue Bild in 550 ms ein. Dadurch entstehen keine übereinanderliegenden Gesichter. Die Identität ist trotzdem nicht garantiert: Das Modell erzeugt das Gesicht weiterhin neu; Mimik und einzelne Züge können abweichen.
+A FastAPI service handles uploads and a persistent SQLite queue. One resident model runs on one GPU. Requested products take priority over background jobs that have not started. Results are reused by session, product combination, view and generation version, so returning to a product does not generate a new image.
 
-## Grenzen
+Measured image generation took **8.4 seconds** for the tested overshirt, **14.2 seconds** for the front view of the five-piece outfit and approximately **6.1 seconds** for each additional outfit view. Queueing, upload, polling and transitions add to these times. These are single-session measurements, not a load-test or multi-user guarantee.
 
-Die Anprobe ist eine KI-Visualisierung, keine Passform- oder Größenberechnung. Seiten- und Rückansichten sind plausible Interpretationen aus den vorhandenen Bildern. Artikelmerkmale und Identität können zwischen Ansichten abweichen. Im gewählten Ausgangsfoto fehlen Füße und untere Beine; die Ganzkörperdarstellung ergänzt sie.
+## Face reference and reveal
 
-Qwen-Image-2.1 steht in der hier verwendeten Version unter einer Research-Lizenz für nichtkommerzielle Nutzung. Die Installation ist entsprechend als Evaluation gekennzeichnet. Vor einem kommerziellen Einsatz sind die Modellrechte separat zu klären: [Modell und Lizenz](https://huggingface.co/Qwen/Qwen-Image-2.1).
+Visual review of the original outfit demo confirmed facial drift. The revised pipeline uses a detected face crop as its first reference and prioritizes facial features, glasses, hairline and head orientation. It skips ambiguous detections. Side and back views rotate the completed front-view image as their single reference; multiple person references had produced duplicate people in an intermediate experiment. Cache keys include the generation version so older results do not hide pipeline changes.
 
-Im laufenden Shop liegen Kundenfotos und generierte Kundenbilder außerhalb des Repositories und außerhalb öffentlicher Shopware-Medien. Die ausdrücklich freigegebene persönliche Demo-GIF ist in dieser privaten README enthalten; Video und Medienpaket liegen im privaten GitHub-Release. Sie sind über ein HttpOnly-Sitzungscookie geschützt, laufen nach 24 Stunden ab und lassen sich sofort löschen. Die LAN-Demo nutzt HTTP; sie ist kein öffentlicher Produktionsbetrieb.
+The old image fades out over 180 ms, then the loaded new image fades in over 550 ms. This prevents two faces from appearing on top of each other. Identity is still not guaranteed: the model regenerates the face, and expressions or individual features can change.
 
-## Entwicklung und Betrieb
+## Limitations and privacy
 
-- [Architektur](docs/ARCHITECTURE.md)
-- [Installation und Betrieb](docs/DEPLOY.md)
-- [Prüfergebnisse](docs/VERIFICATION.md)
-- [Drittanbieter und Medien](docs/THIRD_PARTY.md)
+This is an AI visualization, not a clothing-size or physical-fit measurement. Side and rear views are plausible interpretations of the available images. Product details and identity may vary across views. The selected reference photo does not show the feet or lower legs, so the full-body result generates those areas.
 
-`api/` enthält den Bildservice, `shopware/AtelierYou/` das Storefront-Plugin, `scripts/` die reproduzierbare Produktanlage und `videos/atelier-you/` die Demo-Komposition. Die README-GIF ist eingecheckt. Das [private Release](https://github.com/sthamann/atelier-you/releases/tag/v0.2.0) enthält das vollständige Video und ein Projektpaket mit den zum Rendern benötigten Medien. Zugangsdaten, laufende Kundensitzungen und Modellgewichte gehören nicht ins Repository. [Medien und Reproduktion](docs/MEDIA.md).
+The pinned Qwen-Image-2.1 version uses a research license for noncommercial use. This installation is marked as an evaluation. Commercial deployment requires a separate review of model rights: [model and license](https://huggingface.co/Qwen/Qwen-Image-2.1).
+
+Runtime customer photos and results are stored outside the repository and outside public Shopware media. Access requires the owner’s HttpOnly session cookie. Sessions expire after 24 hours and can be deleted immediately. The personal demo GIF is included in this private README at the user’s explicit request; the video and editable media package are private release assets. These release artifacts are separate from expiring runtime sessions. The LAN demo uses HTTP and is not a public production deployment.
+
+## Development and operation
+
+- [Architecture](docs/ARCHITECTURE.md)
+- [Installation and operation](docs/DEPLOY.md)
+- [Verification](docs/VERIFICATION.md)
+- [Third-party software and media](docs/THIRD_PARTY.md)
+- [Media and reproduction](docs/MEDIA.md)
+
+`api/` contains the image service, `shopware/AtelierYou/` the storefront plugin, `scripts/` the reproducible catalog setup and `videos/atelier-you/` the demo composition. The README GIF is tracked in Git. The [private release](https://github.com/sthamann/atelier-you/releases/tag/v0.3.0) includes the video and the media needed to edit and render it. Credentials, runtime customer sessions and model weights are excluded.
