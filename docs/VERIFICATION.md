@@ -1,10 +1,12 @@
 # Verified on 2026-09-21
 
-## Running system
+## Reference test environment
 
-- Dedicated Shopware 6.6.10.6 container on `192.168.1.120:8090`, with 17 seeded products, media and real product detail routes.
+These results describe the original test installation, not a hosted service. Follow [the deployment guide](DEPLOY.md) to configure your own environment. Hardware, queueing and network differences affect results.
+
+- Dedicated Shopware 6.6.10.6 development container, with 17 seeded products, media and real product detail routes.
 - FastAPI health reports ready with Qwen-Image-2.1 revision `b3179ad355be050328e483a9dfdd9e60cd62adfa`.
-- NVIDIA process query matched the running systemd service PID to RTX PRO 6000 UUID `GPU-c5489862-1768-0719-a514-b0f5ad58d976`. Resident allocation was approximately 31.7 GB. Other GPUs were not used by this service.
+- NVIDIA process query matched the running systemd service PID to the selected RTX PRO 6000 (96 GB VRAM). Resident allocation was approximately 31.7 GB. Other GPUs were not used by this service.
 - Restarted the service and confirmed readiness and retained session results afterwards.
 
 ## Functional evidence

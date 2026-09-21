@@ -10,7 +10,7 @@ The release contains:
 - `atelier-you-personal-catalog.png`: the actual personalized collection after one upload.
 - `SHA256SUMS.txt`: release checksums.
 
-Unzip the project archive, enter `videos/atelier-you`, run `npm run check`, then `npm run render`. Node/npm and network access for the pinned HyperFrames package and GSAP are required. The repository contains the composition and inline media; the release archive restores all required larger assets at their relative paths. Credentials, runtime sessions and model weights are excluded.
+Unzip the project archive, enter `videos/atelier-you`, run `npm run check`, then `npm run render`. Node/npm and network access for the pinned HyperFrames package and GSAP are required. The archive is a snapshot of the video release, not the current installation guide. For application setup, use the [current deployment guide](https://github.com/sthamann/atelier-you/blob/main/docs/DEPLOY.md). The repository contains the composition and inline media; the release archive restores all required larger assets at their relative paths. Credentials, runtime sessions and model weights are excluded.
 
 ## Sequence
 
