@@ -1,0 +1,17 @@
+[Unit]
+Description=ATELIER YOU private Qwen try-on API
+After=network-online.target
+[Service]
+Type=simple
+WorkingDirectory=/home/aime/atelier-tryon/repo
+Environment=CUDA_VISIBLE_DEVICES=GPU-c5489862-1768-0719-a514-b0f5ad58d976
+Environment=MODEL_PATH=/home/aime/atelier-tryon/model
+Environment=DATA_DIR=/home/aime/atelier-tryon/data
+Environment=PUBLIC_ORIGIN=http://192.168.1.120:8090
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/home/aime/atelier-tryon/.venv/bin/uvicorn api.app:app --host 192.168.1.120 --port 8091 --workers 1
+Restart=on-failure
+RestartSec=5
+UMask=0077
+[Install]
+WantedBy=default.target

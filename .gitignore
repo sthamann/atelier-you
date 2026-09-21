@@ -1,0 +1,20 @@
+.env
+.venv/
+__pycache__/
+.pytest_cache/
+data/
+model/
+*.log
+*.sqlite*
+node_modules/
+.codebase-memory/
+# Private demo captures, customer photos and audio are local deliverables only.
+videos/**/assets/
+videos/**/capture/
+videos/**/snapshots/
+videos/**/renders/
+videos/**/.media/
+videos/**/.hyperframes/
+videos/**/capture-result.json
+videos/**/audio_meta.json
+videos/**/audio_request.json

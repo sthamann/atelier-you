@@ -1,0 +1,45 @@
+<!doctype html><html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=1920,height=1080">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<style>
+@font-face{font-family:Manrope;src:url('assets/fonts/Manrope.ttf')}@font-face{font-family:JetBrains;src:url('assets/fonts/JetBrainsMono.ttf')}
+*{box-sizing:border-box;margin:0}html,body{width:1920px;height:1080px;overflow:hidden;background:#f7f7f1}
+#root{width:100%;height:100%;font-family:Manrope,sans-serif;color:#202920}.scene{position:absolute;inset:0;overflow:hidden;background:#f7f7f1}
+.brand{position:absolute;left:100px;top:65px;font-size:30px;letter-spacing:-1px}.brand b{font-weight:750}.brand span{font-weight:400}
+.eyebrow{font:20px JetBrains,monospace;letter-spacing:3px}.label{font:19px JetBrains,monospace;letter-spacing:1px}.muted{color:#4f5a45}
+#hook-copy{position:absolute;left:100px;top:255px;width:950px}#hook-title{font-size:128px;line-height:1.05;letter-spacing:-7px;margin-top:40px;font-weight:500}.word{display:block;width:940px;will-change:transform,opacity}
+#hook-note{font-size:28px;line-height:1.5;margin-top:40px;width:750px}.hero-photo{position:absolute;left:1140px;top:118px;width:640px;height:853px;object-fit:cover}.hero-line{position:absolute;left:1095px;top:118px;width:1px;height:853px;background:#b9c2a5}
+.sidebar{position:absolute;left:85px;top:240px;width:440px}.sidebar h2{font-size:76px;line-height:1.07;letter-spacing:-4px;font-weight:500;margin-top:40px}.sidebar p{font-size:26px;line-height:1.5;margin-top:38px}.footer-note{position:absolute;left:85px;top:960px;font:17px JetBrains,monospace;line-height:1.6;width:440px}
+.capture{position:absolute;left:600px;top:67px;width:1260px;height:945px;object-fit:contain;border:1px solid #d0d6c4;background:#f7f7f1}.side-number{font-size:84px;letter-spacing:-5px;margin-top:44px;font-weight:500}.side-sub{font:18px JetBrains,monospace;line-height:1.5;margin-top:8px}
+#angles h2{position:absolute;left:100px;top:103px;font-size:82px;letter-spacing:-4px;font-weight:500}.angle{position:absolute;top:265px;width:455px;height:670px}.angle img{width:455px;height:607px;object-fit:cover}.angle p{font:20px JetBrains,monospace;margin-top:25px;letter-spacing:2px}.angle.a{left:140px}.angle.b{left:732px}.angle.c{left:1324px}#angles-note{position:absolute;left:100px;bottom:43px;font-size:20px;color:#4f5a45}
+#outro{background:#283528;color:#f7f7f1}#outro-copy{position:absolute;left:100px;top:255px;width:1000px}#outro h2{font-size:133px;line-height:1.03;letter-spacing:-7px;font-weight:500}#outro p{font-size:28px;margin-top:42px;width:850px;line-height:1.5}#outro .hero-photo{left:1180px;top:92px;width:660px;height:880px}#outro-foot{position:absolute;left:100px;bottom:67px;font:19px JetBrains,monospace;line-height:1.7;color:#dce4bf}
+#progress{position:absolute;bottom:0;left:0;height:5px;width:1920px;background:#74884e;transform-origin:left center}
+</style></head><body><div id="root" data-composition-id="main" data-width="1920" data-height="1080" data-duration="60">
+<section id="hook" class="clip scene" data-start="0" data-duration="5" data-track-index="0">
+<div class="brand"><b>ATELIER</b><span> / YOU</span></div><div id="hook-copy"><div class="eyebrow">PERSONAL EDITION / SHOPWARE</div><h1 id="hook-title"><span class="word" data-layout-allow-overlap>Ein Foto.</span><span class="word" data-layout-allow-overlap>Jeder Look.</span><span class="word" data-layout-allow-overlap>Ganz du.</span></h1><p id="hook-note">Deine Garderobe beginnt bei dir.</p></div><div class="hero-line"></div>
+<img id="photo-original" class="hero-photo" src="assets/stefan-reference.jpg"><img id="photo-single" class="hero-photo" src="assets/fccffc795b99523f98c37e32a589a957-front.webp"><img id="photo-outfit" class="hero-photo" src="assets/outfit-94a91d1fb7dbe5332161a745-front.webp">
+</section>
+<section id="magic-copy" class="clip scene" data-start="5" data-duration="20.5" data-track-index="0"><div class="brand"><b>ATELIER</b><span> / YOU</span></div><div class="sidebar"><div class="eyebrow">01 / DEIN FOTO</div><h2>Ein bisschen Magie.</h2><p>Foto hochladen. Dein Look entsteht. Das neue Bild gleitet sanft ins Licht.</p><div class="side-number">~8 s</div><div class="side-sub">BILDBERECHNUNG<br>BEIM GEZEIGTEN OBERTEIL</div></div><div class="footer-note">Echte Shopware-Aufnahme.<br>Inklusive Wartezeit &amp; Überblendung.</div></section>
+<video id="magic-video" class="clip capture" src="assets/magic.mp4" data-start="5" data-duration="20.5" data-track-index="1" muted playsinline></video>
+<section id="angles" class="clip scene" data-start="25.5" data-duration="6.5" data-track-index="0"><h2>Dein Look. Neue Perspektiven.</h2><div class="angle a"><img src="assets/outfit-94a91d1fb7dbe5332161a745-front.webp"><p>01 / VORNE</p></div><div class="angle b"><img src="assets/outfit-94a91d1fb7dbe5332161a745-side.webp"><p>02 / SEITE</p></div><div class="angle c"><img src="assets/outfit-94a91d1fb7dbe5332161a745-back.webp"><p>03 / HINTEN</p></div><p id="angles-note">Zusätzliche Ansichten sind KI-generierte Interpretationen.</p></section>
+<section id="outfit-copy" class="clip scene" data-start="32" data-duration="22" data-track-index="0"><div class="brand"><b>ATELIER</b><span> / YOU</span></div><div class="sidebar"><div class="eyebrow">02 / OUTFIT STUDIO</div><h2>Alles passt. Zu dir.</h2><p>T-Shirt, Jacke, Hose, Schuhe und Cap. Fünf Teile. Ein gemeinsamer Look.</p><div class="side-number">~13 s</div><div class="side-sub">BILDBERECHNUNG<br>FÜR DIESEN FÜNF-TEILE-LOOK</div></div><div class="footer-note">Echte Shopware-Aufnahme.<br>Ausschnitt in Originalgeschwindigkeit.</div></section>
+<video id="outfit-video" class="clip capture" src="assets/outfit.mp4" data-start="32" data-duration="22" data-track-index="1" muted playsinline></video>
+<section id="outro" class="clip scene" data-start="54" data-duration="6" data-track-index="0"><div class="brand"><b>ATELIER</b><span> / YOU</span></div><div id="outro-copy"><div class="eyebrow" style="margin-bottom:45px">THE NEW PERSPECTIVE</div><h2><span class="end-word word" data-layout-allow-overlap>17 Pieces.</span><span class="end-word word" data-layout-allow-overlap>Dein Stil.</span></h2><p>Echter Shopware Shop. Qwen-Image-2.1 auf der RTX PRO 6000.</p></div><img id="outro-photo" class="hero-photo" src="assets/outfit-94a91d1fb7dbe5332161a745-front.webp"><div id="outro-foot">PRIVATE EVALUATION / 21.09.2026<br>KI-Visualisierung · keine Passformmessung</div></section>
+<audio id="music-bed" src="assets/music-final.wav" data-start="0" data-duration="60" data-track-index="10" data-volume="0.85"></audio><div id="progress"></div>
+</div><script>
+const tl=gsap.timeline({paused:true});
+// Tight editorial leading: visual review confirms glyphs do not overlap despite font line boxes.
+// Adapted text-stagger registry primitive; editorial palette and no blur for crisp type.
+tl.fromTo('#hook-title .word',{opacity:0,y:48},{opacity:1,y:0,duration:.54,stagger:.12,ease:'power3.out'},.15);
+tl.fromTo('#hook-note',{opacity:0,y:20},{opacity:1,y:0,duration:.5},.8);
+tl.fromTo('#photo-original',{opacity:0,x:80},{opacity:1,x:0,duration:.65,ease:'power3.out'},.1);
+tl.fromTo('#photo-single',{opacity:0,x:30},{opacity:1,x:0,duration:.65,ease:'power3.out'},1.6);
+tl.fromTo('#photo-outfit',{opacity:0,x:30},{opacity:1,x:0,duration:.65,ease:'power3.out'},3.15);
+tl.fromTo('#magic-copy .sidebar',{opacity:0,y:35},{opacity:1,y:0,duration:.6},5.1);
+tl.fromTo('#angles h2',{opacity:0,y:25},{opacity:1,y:0,duration:.5},25.65);
+tl.fromTo('#angles .angle',{opacity:0,y:65},{opacity:1,y:0,duration:.65,stagger:.16,ease:'power3.out'},25.8);
+tl.fromTo('#outfit-copy .sidebar',{opacity:0,y:35},{opacity:1,y:0,duration:.6},32.1);
+tl.fromTo('#outro .end-word',{opacity:0,y:55},{opacity:1,y:0,duration:.6,stagger:.14,ease:'power3.out'},54.1);
+tl.fromTo('#outro-photo',{opacity:0,x:60},{opacity:1,x:0,duration:.85,ease:'power3.out'},54.15);
+tl.fromTo('#progress',{scaleX:0},{scaleX:1,duration:60,ease:'none'},0);
+window.__timelines['main']=tl;
+</script></body></html>

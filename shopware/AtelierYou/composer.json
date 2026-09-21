@@ -1,0 +1,1 @@
+{"name":"atelier/you","description":"Private Qwen Image virtual try-on for Shopware Storefront","type":"shopware-platform-plugin","version":"0.1.0","license":"MIT","require":{"shopware/core":"~6.6.0"},"autoload":{"psr-4":{"AtelierYou\\":"src/"}},"extra":{"shopware-plugin-class":"AtelierYou\\AtelierYou","label":{"en-GB":"ATELIER / YOU","de-DE":"ATELIER / YOU"}}}
